@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — IndusTools</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0D0D0F;
+    color: #F2F2F0;
+  }
+  a { text-decoration: none; color: inherit; }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 3rem;
+    background: #0D0D0F;
+    border-bottom: 1px solid #2A2A2D;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo { font-size: 20px; font-weight: 600; letter-spacing: 0.5px; color: #F2F2F0; }
+  .logo span { color: #35FF69; }
+  nav { display: flex; align-items: center; gap: 32px; }
+  nav a {
+    font-size: 14px;
+    color: #A0A09A;
+    position: relative;
+    padding-bottom: 4px;
+    transition: color 0.25s ease;
+  }
+  nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 1px;
+    background: #35FF69;
+    transition: width 0.25s ease;
+  }
+  nav a:hover, nav a.active { color: #35FF69; }
+  nav a:hover::after, nav a.active::after { width: 100%; }
+
+  .has-dropdown { position: relative; }
+  .dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 12px;
+    background: #131315;
+    border: 0.5px solid #2A2A2D;
+    border-radius: 4px;
+    min-width: 200px;
+    padding: 6px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    z-index: 200;
+  }
+  .has-dropdown:hover .dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+  .dropdown a {
+    display: block;
+    font-size: 13px;
+    color: #A0A09A;
+    padding: 8px 10px;
+    border-radius: 3px;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .dropdown a::after { display: none; }
+  .dropdown a:hover { background: #1B1B1E; color: #35FF69; }
+
+  /* CONTACT SECTION */
+  .contact-section {
+    padding: 4rem 3rem 5rem;
+    background: #FAFAF8;
+  }
+  .contact-inner { max-width: 620px; margin: 0 auto; }
+  .contact-inner .eyebrow {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    color: #856F0B;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .contact-inner h1 {
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #17171A;
+  }
+  .contact-inner > p {
+    font-size: 14px;
+    color: #5A5A55;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+
+  form { display: flex; flex-direction: column; gap: 20px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  label {
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    color: #5A5A55;
+    font-weight: 500;
+  }
+  input[type="text"], input[type="email"], textarea {
+    background: #FFFFFF;
+    border: 1px solid #D5D5CE;
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: #17171A;
+    font-family: inherit;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+    outline: none;
+    border-color: #856F0B;
+    box-shadow: 0 0 0 3px rgba(133,111,11,0.1);
+  }
+  textarea {
+    resize: vertical;
+    min-height: 220px;
+    line-height: 1.6;
+  }
+  .word-count {
+    font-size: 12px;
+    color: #A0A09A;
+    text-align: right;
+  }
+  .word-count.limit-reached { color: #C0392B; }
+
+  .btn-submit {
+    background: #0D0D0F;
+    color: #35FF69;
+    border: 1px solid #0D0D0F;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 13px 26px;
+    border-radius: 4px;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(13,13,15,0.2);
+    background: #1B1B1E;
+  }
+
+  .form-status {
+    font-size: 13px;
+    margin-top: -6px;
+    display: none;
+  }
+  .form-status.success { color: #2E7D32; display: block; }
+  .form-status.error { color: #C0392B; display: block; }
+
+  /* FOOTER */
+  footer { background: #0D0D0F; border-top: 1px solid #2A2A2D; padding: 3rem; text-align: center; }
+  footer h3 { font-size: 20px; font-weight: 500; margin-bottom: 10px; color: #F2F2F0; }
+  footer p { font-size: 14px; color: #A0A09A; margin-bottom: 20px; }
+  .footer-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 20px; }
+  .footer-links a {
+    font-size: 13px;
+    color: #A0A09A;
+    position: relative;
+    padding-bottom: 4px;
+    transition: color 0.25s ease;
+  }
+  .footer-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 1px;
+    background: #35FF69;
+    transition: width 0.25s ease;
+  }
+  .footer-links a:hover { color: #35FF69; }
+  .footer-links a:hover::after { width: 100%; }
+  .footer-copyright { font-size: 12px; color: #5A5A55; border-top: 1px solid #2A2A2D; padding-top: 16px; }
+
+  /* BOUTON RETOUR EN HAUT */
+  .back-to-top {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 46px;
+    height: 46px;
+    background: #0D0D0F;
+    border: 1px solid #35FF69;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease, background 0.2s ease, box-shadow 0.2s ease;
+    z-index: 999;
+  }
+  .back-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+  .back-to-top:hover { background: #1B1B1E; box-shadow: 0 6px 18px rgba(53,255,105,0.25); transform: translateY(-3px); }
+  .back-to-top svg { width: 18px; height: 18px; }
+
+  @media (max-width: 700px) {
+    .back-to-top { bottom: 18px; right: 18px; width: 42px; height: 42px; }
+    header { padding: 1rem 1.25rem; flex-direction: column; gap: 12px; }
+    nav { gap: 16px; flex-wrap: wrap; justify-content: center; }
+    .contact-section { padding: 2.5rem 1.5rem; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Indus<span>Tools</span></div>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <div class="has-dropdown">
+      <a href="#">Recherche opérationnelle</a>
+      <div class="dropdown">
+        <a href="industools_prog_lineaire.html">Programmation linéaire</a>
+      </div>
+    </div>
+    <a href="#">Analyse numérique</a>
+    <a href="#">Gestion de production</a>
+    <a href="industools_apropos.html">À propos</a>
+    <a href="#" class="active">Contact</a>
+  </nav>
+</header>
+
+<section class="contact-section">
+  <div class="contact-inner">
+    <p class="eyebrow">CONTACT</p>
+    <h1>Une question, un projet ?</h1>
+    <p>Envoyez-moi un message directement depuis ce formulaire — je réponds dès que possible.</p>
+
+    <form id="contactForm" action="https://formspree.io/f/VOTRE_ID_FORMSPREE" method="POST">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" name="nom" required>
+        </div>
+        <div class="form-group">
+          <label for="prenom">Prénom</label>
+          <input type="text" id="prenom" name="prenom" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" maxlength="4000" required></textarea>
+        <div class="word-count" id="wordCount">0 / 500 mots</div>
+      </div>
+
+      <button type="submit" class="btn-submit">Envoyer le message</button>
+      <p class="form-status" id="formStatus"></p>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <h3>Passez de la théorie à la pratique.</h3>
+  <p>Explorez des outils interactifs conçus pour comprendre, calculer et visualiser les méthodes du génie industriel.</p>
+  <div class="footer-links">
+    <a href="index.html">Accueil</a>
+    <a href="#">Outils</a>
+    <a href="industools_apropos.html">À propos</a>
+    <a href="#" class="active">Contact</a>
+    <a href="https://www.linkedin.com/in/alaeeddineelm/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+  <p class="footer-copyright">© 2026 IndusTools — Créé par ALAE EDDINE E.</p>
+</footer>
+
+<div class="back-to-top" id="backToTop" aria-label="Retour en haut">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#35FF69" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="12" y1="19" x2="12" y2="5"></line>
+    <polyline points="5 12 12 5 19 12"></polyline>
+  </svg>
+</div>
+
+<script>
+  const backToTop = document.getElementById('backToTop');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 300) { backToTop.classList.add('show'); }
+    else { backToTop.classList.remove('show'); }
+  });
+  backToTop.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  const messageBox = document.getElementById('message');
+  const wordCount = document.getElementById('wordCount');
+  const MAX_WORDS = 500;
+
+  messageBox.addEventListener('input', function() {
+    let words = messageBox.value.trim().split(/\s+/).filter(Boolean);
+    if (words.length > MAX_WORDS) {
+      words = words.slice(0, MAX_WORDS);
+      messageBox.value = words.join(' ');
+    }
+    wordCount.textContent = words.length + ' / ' + MAX_WORDS + ' mots';
+    wordCount.classList.toggle('limit-reached', words.length >= MAX_WORDS);
+  });
+
+  const form = document.getElementById('contactForm');
+  const status = document.getElementById('formStatus');
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const data = new FormData(form);
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+      if (response.ok) {
+        status.textContent = 'Message envoyé avec succès. Merci !';
+        status.className = 'form-status success';
+        form.reset();
+        wordCount.textContent = '0 / ' + MAX_WORDS + ' mots';
+      } else {
+        status.textContent = "Une erreur s'est produite. Réessayez plus tard.";
+        status.className = 'form-status error';
+      }
+    } catch (err) {
+      status.textContent = "Une erreur s'est produite. Réessayez plus tard.";
+      status.className = 'form-status error';
+    }
+  });
+</script>
+
+</body>
+</html>

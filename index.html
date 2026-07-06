@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IndusTools — Portfolio Génie Industriel</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0D0D0F;
+    color: #F2F2F0;
+  }
+  a { text-decoration: none; color: inherit; }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 3rem;
+    background: #0D0D0F;
+    border-bottom: 1px solid #2A2A2D;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .logo span { color: #35FF69; }
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+  nav a {
+    font-size: 14px;
+    color: #A0A09A;
+    position: relative;
+    padding-bottom: 4px;
+    transition: color 0.25s ease;
+  }
+  nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 1px;
+    background: #35FF69;
+    transition: width 0.25s ease;
+  }
+  nav a:hover, nav a.active { color: #35FF69; }
+  nav a:hover::after, nav a.active::after { width: 100%; }
+
+  .has-dropdown {
+    position: relative;
+  }
+  .dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 12px;
+    background: #131315;
+    border: 0.5px solid #2A2A2D;
+    border-radius: 4px;
+    min-width: 200px;
+    padding: 6px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    z-index: 200;
+  }
+  .has-dropdown:hover .dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .dropdown a {
+    display: block;
+    font-size: 13px;
+    color: #A0A09A;
+    padding: 8px 10px;
+    border-radius: 3px;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .dropdown a::after { display: none; }
+  .dropdown a:hover {
+    background: #1B1B1E;
+    color: #35FF69;
+  }
+
+  /* HERO */
+  .hero {
+    background: #FAFAF8;
+    color: #17171A;
+    padding: 5rem 3rem;
+  }
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: center;
+  }
+  .hero-image {
+    width: 320px;
+    max-width: 100%;
+  }
+  .hero-image img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .hero .eyebrow {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    color: #856F0B;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-size: 38px;
+    font-weight: 600;
+    max-width: 600px;
+    line-height: 1.3;
+    margin-bottom: 16px;
+  }
+  .hero p {
+    font-size: 15px;
+    color: #5A5A55;
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+  .hero-buttons { display: flex; gap: 14px; }
+  .btn-primary, .btn-secondary {
+    font-size: 14px;
+    font-weight: 500;
+    padding: 12px 22px;
+    border-radius: 4px;
+    display: inline-block;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  .btn-primary { background: #0D0D0F; color: #FFFFFF; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(53,255,105,0.25); }
+  .btn-secondary { border: 1px solid #D5D5CE; color: #17171A; }
+  .btn-secondary:hover { transform: translateY(-2px); border-color: #17171A; }
+
+  /* FEATURE STRIP */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: #2A2A2D;
+  }
+  .feature-card {
+    background: #131315;
+    padding: 2rem;
+    cursor: pointer;
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+  .feature-card:hover {
+    background: #1B1B1E;
+    transform: translateY(-3px);
+  }
+  .feature-card i { font-size: 24px; color: #35FF69; }
+  .feature-card h3 {
+    font-size: 15px;
+    font-weight: 500;
+    margin: 14px 0 6px;
+    color: #F2F2F0;
+  }
+  .feature-card p {
+    font-size: 13px;
+    color: #7A7A75;
+  }
+
+  /* IMMERSIVE SECTIONS */
+  .immersive {
+    position: relative;
+    min-height: 340px;
+    display: flex;
+    align-items: center;
+    padding: 0 4rem;
+    background-size: cover;
+    background-position: center;
+  }
+  .immersive::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  .immersive-content {
+    position: relative;
+    max-width: 460px;
+    z-index: 2;
+  }
+  .immersive .eyebrow {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    color: #35FF69;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  }
+  .immersive h2 {
+    font-size: 26px;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin-bottom: 14px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.75);
+  }
+  .immersive p {
+    font-size: 14px;
+    color: #E5E5E0;
+    line-height: 1.7;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.75);
+  }
+
+  .section-1 {
+    background-image: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.8) 38%, rgba(0,0,0,0) 62%), url('https://images.unsplash.com/photo-1686061593213-98dad7c599b9?fm=jpg&q=80&w=1600&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    justify-content: flex-start;
+  }
+
+  .section-2 {
+    background-image: linear-gradient(270deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.8) 38%, rgba(0,0,0,0) 62%), url('https://images.unsplash.com/photo-1581094008956-c848ff90bb85?fm=jpg&q=80&w=1600&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    justify-content: flex-end;
+  }
+  .section-2 .immersive-content { text-align: right; }
+
+  .section-3 {
+    background-image: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.8) 38%, rgba(0,0,0,0) 62%), url('https://images.unsplash.com/photo-1587754639218-b084a8746375?fm=jpg&q=80&w=1600&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    justify-content: flex-start;
+  }
+
+  /* Photos : 1981 Digital, ThisisEngineering, Chris Lutke — via Unsplash (licence Unsplash, gratuite) */
+  /* L'assombrissement ne couvre que la zone du texte (~40% de la largeur), le reste de la photo reste net */
+
+  /* FOOTER CTA */
+  footer {
+    background: #0D0D0F;
+    border-top: 1px solid #2A2A2D;
+    padding: 3rem;
+    text-align: center;
+  }
+  footer h3 { font-size: 20px; font-weight: 500; margin-bottom: 10px; }
+  footer p { font-size: 14px; color: #A0A09A; margin-bottom: 20px; }
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .footer-links a {
+    font-size: 13px;
+    color: #A0A09A;
+    position: relative;
+    padding-bottom: 4px;
+    transition: color 0.25s ease;
+  }
+  .footer-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 1px;
+    background: #35FF69;
+    transition: width 0.25s ease;
+  }
+  .footer-links a:hover { color: #35FF69; }
+  .footer-links a:hover::after { width: 100%; }
+  .footer-copyright {
+    font-size: 12px;
+    color: #5A5A55;
+    border-top: 1px solid #2A2A2D;
+    padding-top: 16px;
+  }
+
+  /* BOUTON RETOUR EN HAUT */
+  .back-to-top {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 46px;
+    height: 46px;
+    background: #0D0D0F;
+    border: 1px solid #35FF69;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease, background 0.2s ease, box-shadow 0.2s ease;
+    z-index: 999;
+  }
+  .back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .back-to-top:hover {
+    background: #1B1B1E;
+    box-shadow: 0 6px 18px rgba(53,255,105,0.25);
+    transform: translateY(-3px);
+  }
+  .back-to-top svg { width: 18px; height: 18px; }
+
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-image { justify-self: center; order: -1; width: 260px; }
+  }
+
+  @media (max-width: 700px) {
+    .back-to-top { bottom: 18px; right: 18px; width: 42px; height: 42px; }
+    header { padding: 1rem 1.25rem; flex-direction: column; gap: 12px; }
+    nav { gap: 16px; flex-wrap: wrap; justify-content: center; }
+    .hero { padding: 3rem 1.5rem; }
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-image { justify-self: center; order: -1; width: 220px; }
+    .hero h1 { font-size: 26px; }
+    .features { grid-template-columns: 1fr; }
+    .immersive { padding: 2rem 1.5rem; }
+    .immersive-content { text-align: left !important; max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Indus<span>Tools</span></div>
+  <nav>
+    <a href="index.html" class="active">Accueil</a>
+    <div class="has-dropdown">
+      <a href="#">Recherche opérationnelle</a>
+      <div class="dropdown">
+        <a href="industools_prog_lineaire.html">Programmation linéaire</a>
+      </div>
+    </div>
+    <a href="#">Analyse numérique</a>
+    <a href="#">Gestion de production</a>
+    <a href="industools_apropos.html">À propos</a>
+    <a href="industools_contact.html">Contact</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <p class="eyebrow">GENIE INDUSTRIEL · PROJETS &amp; OUTILS</p>
+      <h1>Des projets concrets pour comprendre, optimiser et piloter l'industrie.</h1>
+      <p>IndusTools réunit mes réalisations en recherche opérationnelle, analyse numérique et gestion de production.</p>
+      <div class="hero-buttons">
+        <a href="industools_apropos.html" class="btn-primary">À propos</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="hero-illustration.png" alt="Illustration ordinateur rétro">
+    </div>
+  </div>
+</section>
+
+<div class="features">
+  <div class="feature-card">
+    <i class="ti ti-chart-bar"></i>
+    <h3>Recherche opérationnelle</h3>
+    <p>Programmation linéaire, PERT, simulation</p>
+  </div>
+  <div class="feature-card">
+    <i class="ti ti-calculator"></i>
+    <h3>Analyse numérique</h3>
+    <p>Intégration numérique, méthodes itératives</p>
+  </div>
+  <div class="feature-card">
+    <i class="ti ti-settings"></i>
+    <h3>Gestion de production</h3>
+    <p>OEE, SMED, AMDEC, Pareto</p>
+  </div>
+</div>
+
+<div class="immersive section-1">
+  <div class="immersive-content">
+    <h2>C'est quoi IndusTools ?</h2>
+    <p>IndusTools transforme les méthodes du génie industriel en outils interactifs utilisables en ligne. Saisissez vos données, lancez les calculs et visualisez les résultats.</p>
+  </div>
+</div>
+
+<div class="immersive section-2">
+  <div class="immersive-content">
+    <h2>Pourquoi ce site existe ?</h2>
+    <p>Parce que les formules et tableaux ne suffisent pas toujours à comprendre une méthode. IndusTools rend la théorie plus claire, visuelle et directement applicable.</p>
+  </div>
+</div>
+
+<div class="immersive section-3">
+  <div class="immersive-content">
+    <h2>Vers où va ce site ?</h2>
+    <p>La plateforme évoluera avec de nouveaux modules : optimisation, analyse numérique, gestion de production, prévision, qualité et data industrielle.</p>
+  </div>
+</div>
+
+<footer>
+  <h3>Passez de la théorie à la pratique.</h3>
+  <p>Explorez des outils interactifs conçus pour comprendre, calculer et visualiser les méthodes du génie industriel.</p>
+  <div class="footer-links">
+    <a href="#">Accueil</a>
+    <a href="#">Outils</a>
+    <a href="industools_apropos.html">À propos</a>
+    <a href="industools_contact.html">Contact</a>
+    <a href="https://www.linkedin.com/in/alaeeddineelm/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+  <p class="footer-copyright">© 2026 IndusTools — Créé par ALAE EDDINE E.</p>
+</footer>
+
+<div class="back-to-top" id="backToTop" aria-label="Retour en haut">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#35FF69" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="12" y1="19" x2="12" y2="5"></line>
+    <polyline points="5 12 12 5 19 12"></polyline>
+  </svg>
+</div>
+
+<script>
+  const backToTop = document.getElementById('backToTop');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 300) {
+      backToTop.classList.add('show');
+    } else {
+      backToTop.classList.remove('show');
+    }
+  });
+  backToTop.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+
+</body>
+</html>
